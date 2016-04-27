@@ -69,9 +69,9 @@
 
     var files = readdirp({
       root: context.sourceDirectory,
-      fileFilter: ignore
+      fileFilter: ignore,
+      directoryFilter: ignore
     });
-    console.log('Files: ', files);
 
     var uploader = s3sync({
       key: credentials.key,
