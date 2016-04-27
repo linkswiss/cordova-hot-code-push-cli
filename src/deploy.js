@@ -67,24 +67,31 @@
       directoryFilter: ignore
     });
 
-    var uploader = s3sync({
-      key: credentials.key,
-      secret: credentials.secret,
-      region: config.s3region,
-      bucket: config.s3bucket,
-      acl: 'public-read',
-      headers: {
-        CacheControl: 'no-cache, no-store, must-revalidate',
-        Expires: 0
-      },
-      concurrency: 20
-    }).on('data', function(file) {
-      if (file.fresh) {
-        console.log("Updated " + file.fullPath + ' -> ' + file.url)
-      }
-    });
+    readdirp({ root: context.sourceDirectory, directoryFilter: ignore })
+      .on('data', function (entry) {
+          console.log("FILE " + file.fullPath);
+        // do something with each file entry found outside '.git' or any modules directory
+      });
 
-    files.pipe(uploader);
+
+    // var uploader = s3sync({
+    //   key: credentials.key,
+    //   secret: credentials.secret,
+    //   region: config.s3region,
+    //   bucket: config.s3bucket,
+    //   acl: 'public-read',
+    //   headers: {
+    //     CacheControl: 'no-cache, no-store, must-revalidate',
+    //     Expires: 0
+    //   },
+    //   concurrency: 20
+    // }).on('data', function (file) {
+    //   if (file.fresh) {
+    //     console.log("Updated " + file.fullPath + ' -> ' + file.url);
+    //   }
+    // });
+    //
+    // files.pipe(uploader);
 
     console.log('Deploy started');
     uploader.on('error', function(err) {
