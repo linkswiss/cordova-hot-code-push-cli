@@ -73,31 +73,24 @@
       directoryFilter: ignore
     });
 
-    readdirp({ root: context.sourceDirectory, directoryFilter: ignore })
-      .on('data', function (entry) {
-          console.log("FILE " + entry.fullPath);
-        // do something with each file entry found outside '.git' or any modules directory
-      });
+    var uploader = s3sync({
+      key: credentials.key,
+      secret: credentials.secret,
+      region: config.s3region,
+      bucket: config.s3bucket,
+      acl: 'public-read',
+      headers: {
+        CacheControl: 'no-cache, no-store, must-revalidate',
+        Expires: 0
+      },
+      concurrency: 20
+    }).on('data', function (file) {
+      if (file.fresh) {
+        console.log("Updated " + file.fullPath + ' -> ' + file.url);
+      }
+    });
 
-
-    // var uploader = s3sync({
-    //   key: credentials.key,
-    //   secret: credentials.secret,
-    //   region: config.s3region,
-    //   bucket: config.s3bucket,
-    //   acl: 'public-read',
-    //   headers: {
-    //     CacheControl: 'no-cache, no-store, must-revalidate',
-    //     Expires: 0
-    //   },
-    //   concurrency: 20
-    // }).on('data', function (file) {
-    //   if (file.fresh) {
-    //     console.log("Updated " + file.fullPath + ' -> ' + file.url);
-    //   }
-    // });
-    //
-    // files.pipe(uploader);
+    files.pipe(uploader);
 
     console.log('Deploy started');
     uploader.on('error', function (err) {
