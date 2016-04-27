@@ -70,7 +70,7 @@
     var files = readdirp({
       root: context.sourceDirectory,
       fileFilter: ignore,
-      directoryFilter: ['!icons','!lib']
+      directoryFilter: ignore
     });
 
     var uploader = s3sync({
