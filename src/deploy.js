@@ -69,7 +69,7 @@
 
     readdirp({ root: context.sourceDirectory, directoryFilter: ignore })
       .on('data', function (entry) {
-          console.log("FILE " + file.fullPath);
+          console.log("FILE " + entry.fullPath);
         // do something with each file entry found outside '.git' or any modules directory
       });
 
