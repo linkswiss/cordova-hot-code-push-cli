@@ -65,7 +65,7 @@
 
     // console.log('Credentials: ', credentials);
     // console.log('Config: ', config);
-    console.log('Ignore: ', ignore);
+    //console.log('Ignore: ', ignore);
 
     var files = readdirp({
       root: context.sourceDirectory,
